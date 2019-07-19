@@ -2,6 +2,9 @@ using System;
 
 namespace FurnaceSerializer
 {
+    /// <summary>
+    /// Serializer interface for all non-collection types
+    /// </summary>
     public interface ISerializer
     {
         /// <summary>
@@ -31,7 +34,7 @@ namespace FurnaceSerializer
         /// <param name="buffer">The read buffer</param>
         /// <param name="position">Position at which to start reading, inclusive</param>
         /// <param name="peek">Read without incrementing position</param>
-        /// <returns>The read data</returns>
+        /// <returns>The read object</returns>
         object Read(byte[] buffer, ref int position, bool peek = false);
     }
 }

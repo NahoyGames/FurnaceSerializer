@@ -7,28 +7,29 @@ namespace FurnaceSerializer
     public class FurnaceSerializer
     {
         private byte[] _buffer;
-        
-        private Dictionary<Type, ISerializer> _serializers; 
-        
+
+        private readonly Dictionary<Type, ISerializer> _serializers;
+
         /// <summary>
         /// Creates an instance of the FurnaceSerializer
         /// </summary>
         public FurnaceSerializer(bool useDefaultSerializer = true, params ISerializer[] serializers)
         {
-            
-            
+
+
             // Serializers
             _serializers = new Dictionary<Type, ISerializer>();
             if (useDefaultSerializer)
             {
                 RegisterWriters
-                    (
+                (
                     new BoolSerializer(), new ByteSerializer(), new CharSerializer(), new DoubleSerializer(),
-                        new FloatSerializer(), new IntSerializer(), new LongSerializer(), new ShortSerializer(),
-                        new StringSerializer(), new SByteSerializer(), new UIntSerializer(), new ULongSerializer(),
-                        new UShortSerializer()
-                    );
+                    new FloatSerializer(), new IntSerializer(), new LongSerializer(), new ShortSerializer(),
+                    new StringSerializer(), new SByteSerializer(), new UIntSerializer(), new ULongSerializer(),
+                    new UShortSerializer(), new ArraySerializer(this)
+                );
             }
+
             RegisterWriters(serializers);
         }
 
@@ -52,5 +53,7 @@ namespace FurnaceSerializer
                 RegisterWriter(writer);
             }
         }
+
+        public ISerializer FindSerializer(Type type) => _serializers.TryGetValue(type, out var value) ? value : null;
     }
 }

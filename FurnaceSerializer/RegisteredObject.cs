@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FurnaceSerializer.Internal;
 
 namespace FurnaceSerializer
 {
@@ -8,9 +9,7 @@ namespace FurnaceSerializer
     {
         public readonly Type Type;
         private readonly ushort _header;
-
-        private readonly FurnaceSerializer _main;
-
+        
         private readonly Dictionary<FieldInfo, ISerializer> _fields;
         private readonly Dictionary<PropertyInfo, ISerializer> _properties;
 
@@ -19,14 +18,12 @@ namespace FurnaceSerializer
         {
             Type = type;
             _header = header;
-
-            _main = main;
-
+            
             // Fields
             _fields = new Dictionary<FieldInfo, ISerializer>();
             foreach (var field in type.GetFields())
             {
-                if (_main.TryFindSerializer(field.GetType(), out var serializer))
+                if (main.TryFindSerializer(field.FieldType, out var serializer))
                 {
                     _fields.Add(field, serializer);
                 }
@@ -39,7 +36,7 @@ namespace FurnaceSerializer
             _properties = new Dictionary<PropertyInfo, ISerializer>();
             foreach (var property in type.GetProperties())
             {
-                if (main.TryFindSerializer(property.GetType(), out var serializer))
+                if (main.TryFindSerializer(property.PropertyType, out var serializer))
                 {
                     _properties.Add(property, serializer);
                 }
@@ -103,6 +100,31 @@ namespace FurnaceSerializer
             }
 
             return buffer;
+        }
+
+        public object Deserialize(byte[] buffer, ref int position)
+        {
+            var instance = Activator.CreateInstance(Type);
+
+            foreach (var (field, serializer) in _fields)
+            {
+                var value = field.FieldType == typeof(Array)
+                    ? ((ArraySerializer) serializer).ReadArray(buffer, ref position, field.FieldType)
+                    : serializer.Read(buffer, ref position);
+                
+                field.SetValue(instance, value);
+            }
+
+            foreach (var (property, serializer) in _properties)
+            {
+                var value = property.PropertyType == typeof(Array)
+                    ? ((ArraySerializer) serializer).ReadArray(buffer, ref position, property.PropertyType)
+                    : serializer.Read(buffer, ref position);
+                
+                property.SetValue(instance, value);
+            }
+
+            return instance;
         }
     }
 }

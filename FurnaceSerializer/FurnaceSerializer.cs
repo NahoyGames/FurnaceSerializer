@@ -9,10 +9,8 @@ namespace FurnaceSerializer
     /// </summary>
     public class FurnaceSerializer
     {
-        private byte[] _buffer;
-        
         private readonly Dictionary<Type, RegisteredSerializer> _serializers;
-        private List<ISerializer> _headers; // Index is header
+        private readonly List<ISerializer> _headers; // Index is header
 
         /// <summary>
         /// Creates an instance of the FurnaceSerializer
@@ -58,15 +56,27 @@ namespace FurnaceSerializer
         }
 
         /// <summary>
-        /// Register a type of object or struct.
-        /// 
+        /// Register a type of object or struct or array.
+        ///
+        /// If object:
         /// All of its fields with the attribute [FurnaceSerializable] will be considered when passed into Serialize().
         /// All its fields must either have an ISerializer pre-registered or be objects/struct that were registered
         /// via this method.
+        ///
+        /// If array:
+        /// All its elements and its length will be considered when passed into Serialize(), assuming the element type
+        /// is also registered.
         /// </summary>
         public void RegisterType(Type type)
         {
-            RegisterSerializer(new AutoSerializer(type, this));
+            if (type.IsArray)
+            {
+                RegisterSerializer(new ArraySerializer(type, this));
+            }
+            else
+            {
+                RegisterSerializer(new AutoSerializer(type, this));
+            }
         }
 
         /// <summary>

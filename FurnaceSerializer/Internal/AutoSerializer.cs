@@ -13,7 +13,7 @@ namespace FurnaceSerializer.Internal
     /// </summary>
     internal class AutoSerializer : ISerializer
     {
-        private readonly FieldInfo[] _fields;
+        private readonly IEnumerable<FieldInfo> _fields;
         private readonly FurnaceSerializer _main;
         
         public Type Type { get; }
@@ -22,8 +22,9 @@ namespace FurnaceSerializer.Internal
         {
             Type = type;
             _main = main;
-            
-            _fields = type.GetFields();
+
+            _fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(f => Attribute.IsDefined(f, typeof(FurnaceSerializableAttribute)));
         }
 
         public int SizeOf(object value) => _fields.Sum(field => _main.SizeOf(field.GetValue(value)));

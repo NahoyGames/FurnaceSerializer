@@ -90,20 +90,14 @@ namespace FurnaceSerializer
         /// <summary>
         /// Find the size in bytes of a registered value or object. Useful for nested values
         /// </summary>
-        public int SizeOf<T>(T value) => _serializers[typeof(T)].Serializer.SizeOf(value);
+        public int SizeOf(object value) => _serializers[value.GetType()].Serializer.SizeOf(value);
 
         /// <summary>
         /// Write a registered value or object to the buffer. Useful for nested values.
         /// </summary>
-        public bool Write<T>(T value, byte[] buffer, ref int position) =>
-            _serializers[typeof(T)].Serializer.Write(value, buffer, ref position);
-
-        /// <summary>
-        /// Read a registered value or object from the buffer. Useful for nested values.
-        /// </summary>
-        public object Read<T>(byte[] buffer, ref int position, bool peek = false) =>
-            _serializers[typeof(T)].Serializer.Read(buffer, ref position, peek);
-
+        public bool Write(object value, byte[] buffer, ref int position) =>
+            _serializers[value.GetType()].Serializer.Write(value, buffer, ref position);
+        
         /// <summary>
         /// Read a registered value or object from the buffer. Useful for nested values.
         /// </summary>

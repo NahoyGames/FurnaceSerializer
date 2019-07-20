@@ -3,7 +3,7 @@ using System;
 namespace FurnaceSerializer
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class FurnaceSerializableAttribute
+    public class FurnaceSerializableAttribute : Attribute
     {
         
     }

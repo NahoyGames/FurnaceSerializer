@@ -135,6 +135,7 @@ namespace FurnaceSerializer
             var position = 0;
 
             var headerIndex = SerializerUtil.ReadUShort(buffer, ref position, false); // Header
+            if (headerIndex >= _headers.Count) { throw new Exception("Deserializing type not recognized!"); }
             var serializer = _headers[headerIndex];
 
             return serializer.Read(buffer, ref position, false);

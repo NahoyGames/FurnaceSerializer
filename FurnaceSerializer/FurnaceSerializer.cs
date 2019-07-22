@@ -14,12 +14,15 @@ namespace FurnaceSerializer
 
         /// <summary>
         /// Creates an instance of the FurnaceSerializer
+        ///
+        /// If params 'buffer' is null, the Serialize() method will return an exact-size byte[],
+        /// otherwise, it will populate the given buffer and return the length
         /// </summary>
-        public FurnaceSerializer(bool useDefaultSerializer = true, params ISerializer[] serializers)
+        public FurnaceSerializer(bool useDefaultSerializer = true)
         {
             _serializers = new Dictionary<Type, RegisteredSerializer>();
             _headers = new List<ISerializer>();
-            
+
             // Defaults
             if (useDefaultSerializer)
             {
@@ -36,12 +39,6 @@ namespace FurnaceSerializer
                 RegisterSerializer(new UIntSerializer());
                 RegisterSerializer(new ULongSerializer());
                 RegisterSerializer(new UShortSerializer());
-            }
-
-            // User-defined
-            foreach (var serializer in serializers)
-            {
-                RegisterSerializer(serializer);
             }
         }
 
@@ -105,19 +102,24 @@ namespace FurnaceSerializer
             _serializers[type].Serializer.Read(buffer, ref position, peek);
 
         /// <summary>
-        /// Serialize a registered object
+        /// Serialize a registered object. 'length' factors in the offset specified 
         /// </summary>
-        public byte[] Serialize(object value)
+        public byte[] Serialize(object value, out int length, int offset = 0, byte[] buffer = null)
         {
             if (_serializers.TryGetValue(value.GetType(), out var registered))
             {
-                var buffer = new byte[registered.Serializer.SizeOf(value) + sizeof(ushort)]; // include header
-                var position = 0;
+                if (buffer == null)
+                {
+                    buffer = new byte[offset + registered.Serializer.SizeOf(value) + sizeof(ushort)]; // include header
+                }
+
+                var position = offset;
                 
                 SerializerUtil.WriteUShort(registered.Header, buffer, ref position); // Header
 
                 if (registered.Serializer.Write(value, buffer, ref position)) // Value
                 {
+                    length = position;
                     return buffer;
                 }
             }
@@ -125,14 +127,16 @@ namespace FurnaceSerializer
         }
 
         /// <summary>
+        /// Serialize a registered object
+        /// </summary>
+        public byte[] Serialize(object value) => Serialize(value, out _);
+
+        /// <summary>
         /// Deserialize a registered object
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public object Deserialize(byte[] value)
+        public object Deserialize(byte[] buffer, int offset = 0)
         {
-            var buffer = value;
-            var position = 0;
+            var position = offset;
 
             var headerIndex = SerializerUtil.ReadUShort(buffer, ref position, false); // Header
             if (headerIndex >= _headers.Count) { throw new Exception("Deserializing type not recognized!"); }

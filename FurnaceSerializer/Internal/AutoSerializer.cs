@@ -14,11 +14,11 @@ namespace FurnaceSerializer.Internal
     internal class AutoSerializer : ISerializer
     {
         private readonly IEnumerable<FieldInfo> _fields;
-        private readonly FurnaceSerializer _main;
+        private readonly Serializer _main;
         
         public Type Type { get; }
 
-        public AutoSerializer(Type type, FurnaceSerializer main)
+        public AutoSerializer(Type type, Serializer main)
         {
             Type = type;
             _main = main;

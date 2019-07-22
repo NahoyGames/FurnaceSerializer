@@ -4,12 +4,12 @@ namespace FurnaceSerializer.Internal
 {
     internal class ArraySerializer : ISerializer
     {
-        private readonly FurnaceSerializer _main;
+        private readonly Serializer _main;
         private readonly Type _elementType;
         
         public Type Type { get; }
 
-        public ArraySerializer(Type arrayType, FurnaceSerializer main)
+        public ArraySerializer(Type arrayType, Serializer main)
         {
             Type = arrayType;
 

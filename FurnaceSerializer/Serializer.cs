@@ -7,7 +7,7 @@ namespace FurnaceSerializer
     /// <summary>
     /// A modular serializer with networking in mind
     /// </summary>
-    public class FurnaceSerializer
+    public class Serializer
     {
         private readonly Dictionary<Type, RegisteredSerializer> _serializers;
         private readonly List<ISerializer> _headers; // Index is header
@@ -18,7 +18,7 @@ namespace FurnaceSerializer
         /// If params 'buffer' is null, the Serialize() method will return an exact-size byte[],
         /// otherwise, it will populate the given buffer and return the length
         /// </summary>
-        public FurnaceSerializer(bool useDefaultSerializer = true)
+        public Serializer(bool useDefaultSerializer = true)
         {
             _serializers = new Dictionary<Type, RegisteredSerializer>();
             _headers = new List<ISerializer>();

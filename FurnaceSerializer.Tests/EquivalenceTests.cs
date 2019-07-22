@@ -6,7 +6,7 @@ namespace FurnaceSerializer.Tests
 {
     public class Tests
     {
-        private FurnaceSerializer _serializer;
+        private Serializer _serializer;
         private Random _random;
 
         private PacketComplete _packetComplete;
@@ -14,7 +14,7 @@ namespace FurnaceSerializer.Tests
         [SetUp]
         public void Setup()
         {
-            _serializer = new FurnaceSerializer(); // Default w/ no customs
+            _serializer = new Serializer(); // Default w/ no customs
             
             _serializer.RegisterType(typeof(PacketSimpleStruct));
             _serializer.RegisterType(typeof(PacketSimpleClass));

@@ -9,13 +9,13 @@ namespace FurnaceSerializer.Tests
     [TestFixture]
     public class CustomSerializerTests
     {
-        private FurnaceSerializer _serializer;
+        private Serializer _serializer;
         private Random _random;
 
         [SetUp]
         public void Setup()
         {
-            _serializer = new FurnaceSerializer();
+            _serializer = new Serializer();
             
             _serializer.RegisterSerializer(new Vector2Serializer());
             _serializer.RegisterType(typeof(PacketCustomSerializer));

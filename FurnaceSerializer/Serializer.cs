@@ -50,6 +50,8 @@ namespace FurnaceSerializer
         {
             _serializers.Add(serializer.Type, new RegisteredSerializer((ushort)_headers.Count, serializer));
             _headers.Add(serializer);
+            
+            RegisterType(serializer.Type.MakeArrayType());
         }
 
         /// <summary>
@@ -73,6 +75,7 @@ namespace FurnaceSerializer
             else
             {
                 RegisterSerializer(new AutoSerializer(type, this));
+                RegisterType(type.MakeArrayType());
             }
         }
 

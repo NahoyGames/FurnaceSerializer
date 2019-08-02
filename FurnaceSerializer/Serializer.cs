@@ -48,6 +48,11 @@ namespace FurnaceSerializer
         /// </summary>
         public void RegisterSerializer(ISerializer serializer)
         {
+            if (_serializers.ContainsKey(serializer.Type))
+            {
+                return;
+            }
+        
             _serializers.Add(serializer.Type, new RegisteredSerializer((ushort)_headers.Count, serializer));
             _headers.Add(serializer);
 

@@ -5,7 +5,7 @@ namespace FurnaceSerializer
     public partial class ByteBuffer
     {
         private byte[] _data;
-        private int _index, _length;
+        private int _index, _length, _offset;
 
         /// <summary>
         /// Create a new buffer on top of provided data with custom start index and length
@@ -13,8 +13,8 @@ namespace FurnaceSerializer
         public ByteBuffer(byte[] data, int length, int startIndex = 0)
         {
             _data = data;
-            _index = startIndex;
-            _length = startIndex + length;
+            _index = _offset = startIndex;
+            _length = length;
 
             if (_length > _data.Length)
             {
@@ -65,9 +65,9 @@ namespace FurnaceSerializer
         /// </summary>
         public bool Write(byte value)
         {
-            if (_index >= _length) { return false; }
+            if (_offset + _index >= _length) { return false; }
             
-            _data[_index++] = value;
+            _data[_offset + _index++] = value;
             return true;
         }
 
@@ -76,11 +76,11 @@ namespace FurnaceSerializer
         /// </summary>
         public bool Write(byte[] value)
         {
-            if (_index + value.Length > _length) { return false; }
+            if (_offset + _index + value.Length > _length) { return false; }
 
             foreach (var b in value)
             {
-                _data[_index++] = b;
+                _data[_offset + _index++] = b;
             }
 
             return true;
@@ -91,7 +91,7 @@ namespace FurnaceSerializer
         /// </summary>
         public byte ReadByte(bool peek = false)
         {
-            return _data[(peek ? _index : _index++)];
+            return _data[_offset + (peek ? _index : _index++)];
         }
     }
 }

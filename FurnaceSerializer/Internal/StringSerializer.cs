@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace FurnaceSerializer.Internal
 {
@@ -6,12 +7,10 @@ namespace FurnaceSerializer.Internal
     {
         public Type Type => typeof(string);
 
-        public int SizeOf(object value) => SerializerUtil.SizeOfString((string)value);
+        public int SizeOf(object value) => sizeof(ushort) + Encoding.UTF8.GetByteCount((string) value);
 
-        public bool Write(object value, byte[] buffer, ref int position) => 
-            SerializerUtil.WriteString((string)value, buffer, ref position);
+        public bool Write(object value, ByteBuffer buffer) => buffer.Write((string) value);
 
-        public object Read(byte[] buffer, ref int position, bool peek = false) =>
-            SerializerUtil.ReadString(buffer, ref position, peek);
+        public object Read(ByteBuffer buffer, bool peek = false) => buffer.ReadString(peek);
     }
 }

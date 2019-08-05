@@ -8,10 +8,8 @@ namespace FurnaceSerializer.Internal
 
         public int SizeOf(object value) => sizeof(ulong);
 
-        public bool Write(object value, byte[] buffer, ref int position) => 
-            SerializerUtil.WriteULong((ulong)value, buffer, ref position);
+        public bool Write(object value, ByteBuffer buffer) => buffer.Write((ulong) value);
 
-        public object Read(byte[] buffer, ref int position, bool peek = false) =>
-            SerializerUtil.ReadULong(buffer, ref position, peek);
+        public object Read(ByteBuffer buffer, bool peek = false) => buffer.ReadULong(peek);
     }
 }

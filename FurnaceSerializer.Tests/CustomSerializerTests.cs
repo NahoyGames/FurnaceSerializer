@@ -39,6 +39,9 @@ namespace FurnaceSerializer.Tests
                         }
                     );
                 var result = _serializer.Serialize(input);
+                
+                result.Index = 0; // Reset buffer
+
                 var output = _serializer.Deserialize(result);
                 
                 Assert.AreEqual(input.GetType(), output.GetType()); // Type

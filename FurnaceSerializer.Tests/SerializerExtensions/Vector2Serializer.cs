@@ -9,15 +9,13 @@ namespace FurnaceSerializer.Tests.SerializerExtensions
 
         public int SizeOf(object value) => sizeof(float) * 2;
 
-        public bool Write(object value, byte[] buffer, ref int position) =>
-            SerializerUtil.WriteFloat(((Vector2)value).X, buffer, ref position)
-            && SerializerUtil.WriteFloat(((Vector2)value).Y, buffer, ref position);
+        public bool Write(object value, ByteBuffer buffer) => buffer.Write(((Vector2)value).X) && buffer.Write(((Vector2)value).Y);
         
 
-        public object Read(byte[] buffer, ref int position, bool peek = false)
+        public object Read(ByteBuffer buffer, bool peek = false)
         {
-            float x = SerializerUtil.ReadFloat(buffer, ref position, peek);
-            float y = SerializerUtil.ReadFloat(buffer, ref position, peek);
+            float x = buffer.ReadFloat(peek);
+            float y = buffer.ReadFloat(peek);
             
             return new Vector2(x, y);
         }

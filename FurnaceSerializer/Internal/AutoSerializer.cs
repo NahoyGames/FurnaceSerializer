@@ -29,11 +29,11 @@ namespace FurnaceSerializer.Internal
 
         public int SizeOf(object value) => _fields.Sum(field => _main.SizeOf(field.GetValue(value)));
 
-        public bool Write(object value, byte[] buffer, ref int position)
+        public bool Write(object value, ByteBuffer buffer)
         {
             foreach (var field in _fields)
             {
-                if (!_main.Write(field.GetValue(value), buffer, ref position))
+                if (!_main.Write(field.GetValue(value), buffer))
                 {
                     return false;
                 }
@@ -42,13 +42,13 @@ namespace FurnaceSerializer.Internal
             return true;
         }
 
-        public object Read(byte[] buffer, ref int position, bool peek = false)
+        public object Read(ByteBuffer buffer, bool peek = false)
         {
             var instance = Activator.CreateInstance(Type);
             
             foreach (var field in _fields)
             {
-                field.SetValue(instance, _main.Read(field.FieldType, buffer, ref position, peek));
+                field.SetValue(instance, _main.Read(field.FieldType, buffer, peek));
             }
 
             return instance;

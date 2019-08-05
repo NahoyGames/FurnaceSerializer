@@ -8,10 +8,8 @@ namespace FurnaceSerializer.Internal
 
         public int SizeOf(object value) => sizeof(float);
 
-        public bool Write(object value, byte[] buffer, ref int position) => 
-            SerializerUtil.WriteFloat((float)value, buffer, ref position);
+        public bool Write(object value, ByteBuffer buffer) => buffer.Write((float) value);
 
-        public object Read(byte[] buffer, ref int position, bool peek = false) =>
-            SerializerUtil.ReadFloat(buffer, ref position, peek);
+        public object Read(ByteBuffer buffer, bool peek = false) => buffer.ReadFloat(peek);
     }
 }

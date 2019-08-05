@@ -28,14 +28,37 @@ namespace FurnaceSerializer
         public ByteBuffer(byte[] data) : this(data, data.Length) { }
 
         /// <summary>
-        /// Create a new empty buffer with provided length
+        /// Create a new empty buffer with provided length and offset
         /// </summary>
-        public ByteBuffer(int length) : this(new byte[length]) { }
-
+        public ByteBuffer(int length, int offset = 0) : this(new byte[length + offset], length, offset) { }
+        
         /// <summary>
         /// The raw data of the buffer
         /// </summary>
         public byte[] Data => _data;
+
+        /// <summary>
+        /// The length of the buffer
+        /// </summary>
+        public int Length
+        {
+            get => _length;
+            set
+            {
+                _length = value;
+                
+                if (_data.Length < _length)
+                {
+                    Array.Resize(ref _data, _length);
+                }
+            }
+        }
+
+        public int Index
+        {
+            get => _index;
+            set => _index = value;
+        }
 
         /// <summary>
         /// Write a single byte to the buffer

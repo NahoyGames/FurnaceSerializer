@@ -48,7 +48,7 @@ namespace FurnaceSerializer
         /// <summary>
         /// Write a string to the buffer
         /// </summary>
-        public bool WriteString(string value) => Write((ushort) value.Length) && Write(Encoding.UTF8.GetBytes(value));
+        public bool Write(string value) => Write((ushort) value.Length) && Write(Encoding.UTF8.GetBytes(value));
         
         /// <summary>
         /// Write an unsigned 32-bit integer to the buffer

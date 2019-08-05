@@ -133,7 +133,7 @@ namespace FurnaceSerializer
         public ushort ReadUShort(bool peek = false)
         {
             var value = BitConverter.ToUInt16(_data, _index);
-            _index += peek ? 0 : sizeof(char);
+            _index += peek ? 0 : sizeof(ushort);
 
             return value;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using FurnaceSerializer.Tests.Packets;
 using NUnit.Framework;
 
@@ -41,6 +42,9 @@ namespace FurnaceSerializer.Tests
             {
                 var input = new PacketSimpleStruct(_random.Next(), _random.Next());
                 var result = _serializer.Serialize(input);
+                
+                result.Index = 0; // Reset buffer
+
                 var output = _serializer.Deserialize(result);
 
                 Assert.AreEqual(input.GetType(), output.GetType()); // Type
@@ -56,6 +60,9 @@ namespace FurnaceSerializer.Tests
             {
                 var input = new PacketSimpleClass(_random.Next(), _random.Next());
                 var result = _serializer.Serialize(input);
+                
+                result.Index = 0; // Reset buffer
+
                 var output = _serializer.Deserialize(result);
 
                 Assert.AreEqual(input.GetType(), output.GetType()); // Type
@@ -71,6 +78,9 @@ namespace FurnaceSerializer.Tests
             {
                 var input = _packetComplete;
                 var result = _serializer.Serialize(input);
+
+                result.Index = 0; // Reset buffer
+                
                 var output = _serializer.Deserialize(result);
                 
                 Assert.AreEqual(input.GetType(), output.GetType()); // Type

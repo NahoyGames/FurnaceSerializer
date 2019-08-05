@@ -34,13 +34,13 @@ namespace FurnaceSerializer.Internal
             return size;
         }
 
-        public bool Write(object value, byte[] buffer, ref int position)
+        public bool Write(object value, ByteBuffer buffer)
         {
-            SerializerUtil.WriteUShort((ushort)((Array)value).Length, buffer, ref position); // Length
+            buffer.Write((ushort) ((Array) value).Length); // Length
 
             foreach (var element in (Array)value)
             {
-                if (!_main.Write(element, buffer, ref position))
+                if (!_main.Write(element, buffer))
                 {
                     return false;
                 }
@@ -49,14 +49,14 @@ namespace FurnaceSerializer.Internal
             return true;
         }
 
-        public object Read(byte[] buffer, ref int position, bool peek = false)
+        public object Read(ByteBuffer buffer, bool peek = false)
         {
-            int length = SerializerUtil.ReadUShort(buffer, ref position, peek);
+            int length = buffer.ReadUShort(peek); // Length
             var instance = Array.CreateInstance(_elementType, length);
             
             for (var i = 0; i < instance.Length; i++)
             {
-                instance.SetValue(_main.Read(_elementType, buffer, ref position, peek), i);
+                instance.SetValue(_main.Read(_elementType, buffer, peek), i); // Elements
             }
 
             return instance;

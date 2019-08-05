@@ -24,17 +24,15 @@ namespace FurnaceSerializer
         /// </summary>
         /// <param name="value">Value being written</param>
         /// <param name="buffer">Buffer to write the value into</param>
-        /// <param name="position">Index in the buffer to start writing, inclusive</param>
         /// <returns>Success or if buffer ran out of space</returns>
-        bool Write(object value, byte[] buffer, ref int position);
+        bool Write(object value, ByteBuffer buffer);
 
         /// <summary>
         /// Read this serializer type from the buffer
         /// </summary>
         /// <param name="buffer">The read buffer</param>
-        /// <param name="position">Position at which to start reading, inclusive</param>
         /// <param name="peek">Read without incrementing position</param>
         /// <returns>The read object</returns>
-        object Read(byte[] buffer, ref int position, bool peek = false);
+        object Read(ByteBuffer buffer, bool peek = false);
     }
 }

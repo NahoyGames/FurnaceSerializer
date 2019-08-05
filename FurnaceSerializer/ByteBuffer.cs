@@ -59,6 +59,12 @@ namespace FurnaceSerializer
             get => _index;
             set => _index = value;
         }
+        
+        public int Offset
+        {
+            get => _offset;
+            set => _offset = value;
+        }
 
         /// <summary>
         /// Write a single byte to the buffer

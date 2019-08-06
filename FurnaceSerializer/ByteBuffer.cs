@@ -10,13 +10,14 @@ namespace FurnaceSerializer
         /// <summary>
         /// Create a new buffer on top of provided data with custom start index and length
         /// </summary>
-        public ByteBuffer(byte[] data, int length, int startIndex = 0)
+        public ByteBuffer(byte[] data, int length, int offset = 0)
         {
             _data = data;
-            _index = _offset = startIndex;
+            _offset = offset;
             _length = length;
+            _index = 0;
 
-            if (_length > _data.Length)
+            if (_length + _offset > _data.Length)
             {
                 throw new Exception("Length parameter exceeds data's length");
             }
@@ -86,7 +87,8 @@ namespace FurnaceSerializer
 
             foreach (var b in value)
             {
-                _data[_offset + _index++] = b;
+                _data[_offset + _index] = b;
+                _index++;
             }
 
             return true;
@@ -97,7 +99,14 @@ namespace FurnaceSerializer
         /// </summary>
         public byte ReadByte(bool peek = false)
         {
-            return _data[_offset + (peek ? _index : _index++)];
+            byte value =  _data[_offset + _index];
+
+            if (!peek)
+            {
+                _index++;
+            }
+
+            return value;
         }
     }
 }

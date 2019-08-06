@@ -10,7 +10,7 @@ namespace FurnaceSerializer
         /// </summary>
         public bool ReadBool(bool peek = false)
         {
-            var value = BitConverter.ToBoolean(_data, _index);
+            var value = BitConverter.ToBoolean(_data, _index + _offset);
             _index += peek ? 0 : sizeof(bool);
 
             return value;
@@ -21,7 +21,7 @@ namespace FurnaceSerializer
         /// </summary>
         public char ReadChar(bool peek = false)
         {
-            var value = BitConverter.ToChar(_data, _index);
+            var value = BitConverter.ToChar(_data, _index + _offset);
             _index += peek ? 0 : sizeof(char);
 
             return value;
@@ -32,7 +32,7 @@ namespace FurnaceSerializer
         /// </summary>
         public double ReadDouble(bool peek = false)
         {
-            var value = BitConverter.ToDouble(_data, _index);
+            var value = BitConverter.ToDouble(_data, _index + _offset);
             _index += peek ? 0 : sizeof(double);
 
             return value;
@@ -43,7 +43,7 @@ namespace FurnaceSerializer
         /// </summary>
         public float ReadFloat(bool peek = false)
         {
-            var value = BitConverter.ToSingle(_data, _index);
+            var value = BitConverter.ToSingle(_data, _index + _offset);
             _index += peek ? 0 : sizeof(float);
 
             return value;
@@ -54,7 +54,7 @@ namespace FurnaceSerializer
         /// </summary>
         public int ReadInt(bool peek = false)
         {
-            var value = BitConverter.ToInt32(_data, _index);
+            var value = BitConverter.ToInt32(_data, _index + _offset);
             _index += peek ? 0 : sizeof(int);
 
             return value;
@@ -65,7 +65,7 @@ namespace FurnaceSerializer
         /// </summary>
         public long ReadLong(bool peek = false)
         {
-            var value = BitConverter.ToInt64(_data, _index);
+            var value = BitConverter.ToInt64(_data, _index + _offset);
             _index += peek ? 0 : sizeof(long);
 
             return value;
@@ -76,7 +76,7 @@ namespace FurnaceSerializer
         /// </summary>
         public sbyte ReadSByte(bool peek = false)
         {
-            var value = (sbyte) (_data[_index] - Math.Abs(sbyte.MinValue));
+            var value = (sbyte) (_data[_index + _offset] - Math.Abs(sbyte.MinValue));
             _index += peek ? 0 : sizeof(sbyte);
 
             return value;
@@ -87,7 +87,7 @@ namespace FurnaceSerializer
         /// </summary>
         public short ReadShort(bool peek = false)
         {
-            var value = BitConverter.ToInt16(_data, _index);
+            var value = BitConverter.ToInt16(_data, _index + _offset);
             _index += peek ? 0 : sizeof(short);
 
             return value;
@@ -99,7 +99,7 @@ namespace FurnaceSerializer
         public string ReadString(bool peek = false)
         {
             ushort length = ReadUShort(peek);
-            var value = Encoding.UTF8.GetString(_data, _index, length);
+            var value = Encoding.UTF8.GetString(_data, _index + _offset, length);
             _index += peek ? 0 : Encoding.UTF8.GetByteCount(value);
 
             return value;
@@ -110,7 +110,7 @@ namespace FurnaceSerializer
         /// </summary>
         public uint ReadUInt(bool peek = false)
         {
-            var value = BitConverter.ToUInt32(_data, _index);
+            var value = BitConverter.ToUInt32(_data, _index + _offset);
             _index += peek ? 0 : sizeof(uint);
 
             return value;
@@ -121,7 +121,7 @@ namespace FurnaceSerializer
         /// </summary>
         public ulong ReadULong(bool peek = false)
         {
-            var value = BitConverter.ToUInt64(_data, _index);
+            var value = BitConverter.ToUInt64(_data, _index + _offset);
             _index += peek ? 0 : sizeof(ulong);
 
             return value;
@@ -132,7 +132,7 @@ namespace FurnaceSerializer
         /// </summary>
         public ushort ReadUShort(bool peek = false)
         {
-            var value = BitConverter.ToUInt16(_data, _index);
+            var value = BitConverter.ToUInt16(_data, _index + _offset);
             _index += peek ? 0 : sizeof(ushort);
 
             return value;
